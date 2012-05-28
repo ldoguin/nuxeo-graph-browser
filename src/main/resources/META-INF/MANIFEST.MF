@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Nuxeo-WebModule: org.nuxeo.ecm.webengine.app.WebEngineModule;name=rela
+ tionBrowser;package=org/nuxeo/relation
+Bundle-Vendor: Nuxeo
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .
+Bundle-Version: 5.6-I20120502_0115
+Bundle-Name: nuxeo-relation-browser
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: nuxeo-relation-browser
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Nuxeo-Component: OSGI-INF/relationbrowser-action-contrib.xml

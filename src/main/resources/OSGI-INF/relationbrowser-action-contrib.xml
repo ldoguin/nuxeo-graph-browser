@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.nuxeo.relationbrowser.actions.contrib">
+
+	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
+		point="actions">
+		<action id="relation_browser" link="relation_browser"
+			label="label.main.tab.relationbrower" order="100">
+			<category>MAIN_TABS</category>
+		</action>
+	</extension>
+</component>
