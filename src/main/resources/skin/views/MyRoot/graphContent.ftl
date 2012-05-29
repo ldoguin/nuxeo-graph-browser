@@ -1,9 +1,10 @@
 
   <canvas id="viewport" width="1000px" height="600px"></canvas>
-  <div id="legend" style="float:right">
-    <p style="color:red">Subject</p>
-    <p style="color:grey">Predicate</p>
-    <p style="color:blue">Object</p>
+  <div id="selectedDocument" style="float:right;width:200px;padding-right:50px;">
+    <p><strong>Selected Document:</strong>;</p> 
+    <p id="title">&nbsp;</p> 
+    <p id="description">&nbsp;</p>
+    <p id="uuid">&nbsp;</p>
   </div>
   <script src="${skinPath}/js/lib/jquery-1.6.1.min.js"></script>
 

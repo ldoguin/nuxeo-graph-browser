@@ -243,6 +243,7 @@ public class RelationBrowser extends ModuleRoot {
 		DocumentModel doc = session.getDocument(idRef);
 		JSONObject subjectJSObject = createDocumentNode(doc.getTitle(),
 				doc.getId(), "blue");
+		subjectJSObject.put("description", doc.getPropertyValue("dc:description"));
 		JSONArray statementArray = new JSONArray();
 
 		// add Parent Navigation

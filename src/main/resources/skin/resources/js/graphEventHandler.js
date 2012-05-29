@@ -44,7 +44,11 @@ function GraphEventHandler(canvas, particleSystem, baseUrl) {
 	GraphEventHandler.prototype.addFirstNode = function(uuid, prune) {
 		$.getJSON(baseUrl + '/choices/' + uuid,
 				function(data) {
+					if (prune) {
+						me.pruneGraph(uuid);
+					}
 					var nodeToAdd = new Array();
+					var subjectItem;
 					for ( var i = 0; i < data.length; i++) {
 						var item = data[i];
 						subjectLabel = 'doc:' + item.subject.uuid;
@@ -58,15 +62,20 @@ function GraphEventHandler(canvas, particleSystem, baseUrl) {
 						nodeToAdd.push(node);
 						particleSystem.addEdge(subjectLabel, predicateLabel);
 					}
+
+					$("#title").text(item.subject.label);
+					$("#description").text(item.subject.description);
+					$("#uuid").text(item.subject.uuid);
+
 					nodeStack.push(nodeToAdd);
-					if (prune && nodeStack.length > nodeStackSizeBeforePrune) {
-						me.pruneGraph();
-					}
 				});
 	}
 
 	GraphEventHandler.prototype.addTags = function(uuid, prune) {
 		$.getJSON(baseUrl + '/tag/list/' + uuid, function(data) {
+			if (prune) {
+				me.pruneGraph();
+			}
 			var nodeToAdd = new Array();
 			for ( var i = 0; i < data.length; i++) {
 				var item = data[i];
@@ -78,14 +87,14 @@ function GraphEventHandler(canvas, particleSystem, baseUrl) {
 				particleSystem.addEdge(subjectLabel, predicateLabel);
 			}
 			nodeStack.push(nodeToAdd);
-			if (prune && nodeStack.length > nodeStackSizeBeforePrune) {
-				me.pruneGraph();
-			}
 		});
 	}
 
 	GraphEventHandler.prototype.addTagDocuments = function(label) {
 		$.getJSON(baseUrl + '/tag/documents/' + label, function(data) {
+			if (prune) {
+				me.pruneGraph();
+			}
 			var nodeToAdd = new Array();
 			for ( var i = 0; i < data.length; i++) {
 				var item = data[i];
@@ -96,14 +105,14 @@ function GraphEventHandler(canvas, particleSystem, baseUrl) {
 				particleSystem.addEdge(predicateLabel, objectLabel);
 			}
 			nodeStack.push(nodeToAdd);
-			if (prune && nodeStack.length > nodeStackSizeBeforePrune) {
-				me.pruneGraph();
-			}
 		});
 	}
 
 	GraphEventHandler.prototype.addRelation = function(uuid, prune) {
 		$.getJSON(baseUrl + '/relation/uuid/' + uuid, function(data) {
+			if (prune) {
+				me.pruneGraph();
+			}
 			var nodeToAdd = new Array();
 			for ( var i = 0; i < data.length; i++) {
 				var item = data[i];
@@ -112,20 +121,21 @@ function GraphEventHandler(canvas, particleSystem, baseUrl) {
 				predicateLabel = item.subject.uuid + ':' + item.predicate.label
 						+ ':' + item.object.uuid;
 				var node = particleSystem.addNode(objectLabel, item.object);
+				nodeToAdd.push(node);
 				node = particleSystem.addNode(predicateLabel, item.predicate);
 				nodeToAdd.push(node);
 				particleSystem.addEdge(subjectLabel, predicateLabel);
 				particleSystem.addEdge(predicateLabel, objectLabel);
 			}
 			nodeStack.push(nodeToAdd);
-			if (prune && nodeStack.length > nodeStackSizeBeforePrune) {
-				me.pruneGraph();
-			}
 		});
 	}
 
 	GraphEventHandler.prototype.addChildren = function(uuid, prune) {
 		$.getJSON(baseUrl + '/children/' + uuid, function(data) {
+			if (prune) {
+				me.pruneGraph();
+			}
 			var nodeToAdd = new Array();
 			for ( var i = 0; i < data.length; i++) {
 				var item = data[i];
@@ -136,14 +146,14 @@ function GraphEventHandler(canvas, particleSystem, baseUrl) {
 				particleSystem.addEdge(predicateLabel, objectLabel);
 			}
 			nodeStack.push(nodeToAdd);
-			if (prune && nodeStack.length > nodeStackSizeBeforePrune) {
-				me.pruneGraph();
-			}
 		});
 	}
 
 	GraphEventHandler.prototype.addParent = function(uuid, prune) {
 		$.getJSON(baseUrl + '/parent/' + uuid, function(data) {
+			if (prune) {
+				me.pruneGraph();
+			}
 			var nodeToAdd = new Array();
 			for ( var i = 0; i < data.length; i++) {
 				var item = data[i];
@@ -154,17 +164,18 @@ function GraphEventHandler(canvas, particleSystem, baseUrl) {
 				particleSystem.addEdge(predicateLabel, objectLabel);
 			}
 			nodeStack.push(nodeToAdd);
-			if (prune && nodeStack.length > nodeStackSizeBeforePrune) {
-				me.pruneGraph();
-			}
 		});
 	}
 
-	GraphEventHandler.prototype.pruneGraph = function() {
-//		var nodeToRemove = nodeStack.shift();
-//		for ( var j = 0; j < nodeToRemove.length; j++) {
-//			particleSystem.pruneNode(nodeToRemove[j]);
-//		}
+	GraphEventHandler.prototype.pruneGraph = function(uuid) {
+		for ( var i = 0; i < nodeStack.length; i++) {
+			var nodeToRemove = nodeStack[i];
+			for ( var j = 0; j < nodeToRemove.length; j++) {
+				if (nodeToRemove[j].data.uuid != uuid) {
+					particleSystem.pruneNode(nodeToRemove[j]);
+				}
+			}
+		}
 	}
 
 	GraphEventHandler.prototype.dragged = function(e) {
